@@ -11,6 +11,8 @@ jobs:
         ports:
           - 8002:8000
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Install AWS CLI v2
         run: |
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o /tmp/awscliv2.zip
