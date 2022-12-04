@@ -1,0 +1,26 @@
+# GitHub Actionsの定義
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  sample-job-on-the-runner-machine:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: DUMMY_AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: DUMMY_AWS_SECRET_ACCESS_KEY
+      AWS_DEFAULT_REGION: ap-northeast-1
+    steps:
+      - uses: actions/checkout@v3
+      - run: aws dynamodb create-table --cli-input-json file://users-table.json --endpoint-url http://localhost:8000
+      - run: aws dynamodb describe-table --table-name users-table --endpoint-url http://localhost:8000
+    # 実際にDynamoDB Localを設定しているところはここ
+    services:
+      dynamodb:
+        image: amazon/dynamodb-local:latest
+        ports:
+          - 8000:8000
