@@ -12,15 +12,23 @@ jobs:
         image: amazon/dynamodb-local:latest
         ports:
           - 8000:8000
-        env:
-          AWS_ACCESS_KEY_ID: DUMMY_AWS_ACCESS_KEY_ID
-          AWS_SECRET_ACCESS_KEY: DUMMY_AWS_SECRET_ACCESS_KEY
-          AWS_DEFAULT_REGION: ap-northeast-1
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Install AWS CLI v2
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o /tmp/awscliv2.zip
+          unzip -q /tmp/awscliv2.zip -d /tmp
+          rm /tmp/awscliv2.zip
+          /tmp/aws/install --update
+          rm -rf /tmp/aws/
+          aws --version
       - name: dynamodb setup
-        run: aws dynamodb list-tables --endpoint-url http://localhost:8000
+        run: |
+          aws dynamodb list-tables --endpoint-url http://dynamodb:8000
+          aws dynamodb create-table --cli-input-json file://users-table.json --endpoint-url http://dynamodb:8000
+          aws dynamodb describe-table --table-name users-table --endpoint-url http://dynamodb:8000
+          aws dynamodb list-tables --endpoint-url http://dynamodb:8000
         env:
           AWS_ACCESS_KEY_ID: DUMMY_AWS_ACCESS_KEY_ID
           AWS_SECRET_ACCESS_KEY: DUMMY_AWS_SECRET_ACCESS_KEY
