@@ -4,7 +4,7 @@ on: [push, pull_request]
 jobs:
   Dynamodb-setup-actions:
     runs-on: ubuntu-20.04
-    container: node:${{ matrix.node }}
+    container: node:16
     services:
       dynamodb:
         image: amazon/dynamodb-local
