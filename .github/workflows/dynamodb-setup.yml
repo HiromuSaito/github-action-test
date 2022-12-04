@@ -1,0 +1,14 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: [push, pull_request]
+jobs:
+  Dynamodb-setup-actions:
+    runs-on: ubuntu-20.04
+    container: node:${{ matrix.node }}
+    services:
+      dynamodb:
+        image: amazon/dynamodb-local
+        ports:
+          - 8002:8000
+    steps:
+      - run: echo "dynamodb test"
