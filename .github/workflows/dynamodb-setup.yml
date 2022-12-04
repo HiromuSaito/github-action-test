@@ -1,4 +1,4 @@
-name: GitHub Actions Demo
+name: Dynamodb setup demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push, pull_request]
 jobs:
@@ -11,4 +11,11 @@ jobs:
         ports:
           - 8002:8000
     steps:
-      - run: echo "dynamodb test"
+      - name: Setup DynamoDB Local
+        env:
+          AWS_ACCESS_KEY_ID: dummy
+          AWS_SECRET_ACCESS_KEY: dummy
+          AWS_DEFAULT_REGION: ap-northeast-1
+        run: |
+          aws dynamodb list-tables --endpoint-url http://localhost:8002
+          aws dynamodb list-tables --endpoint-url http://localhost:8000
